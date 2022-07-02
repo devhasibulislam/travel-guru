@@ -5,7 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import { Link } from "react-router-dom";
-import Button from '@mui/material/Button'
+import Button from '@mui/material/Button';
 
 const Header = () => {
     const Search = styled('div')(({ theme }) => ({
@@ -68,7 +68,7 @@ const Header = () => {
                     </Link>
                 </div>
                 <div className='start-destination'>
-                    <Search style={{display: "flex", alignItems: "center"}}>
+                    <Search style={{ display: "flex", alignItems: "center" }}>
                         <SearchIconWrapper>
                             <SearchIcon />
                         </SearchIconWrapper>
@@ -84,9 +84,12 @@ const Header = () => {
                         style={{
                             backgroundColor: "#F9A51A",
                             color: "black"
-                    }}
+                        }}
                     >
-                        Login
+                        <Link to={'/login'} style={{
+                            textDecoration: "none",
+                            fontWeight: "bold"
+                        }}>Login</Link>
                     </Button>
                 </div>
             </div>
