@@ -16,6 +16,8 @@ import { Paper, Stack } from '@mui/material';
 import styled from '@emotion/styled';
 import facebook from '../assets/icons/fb.png';
 import google from '../assets/icons/google.png';
+import { useSignInWithFacebook, useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import auth from '../firebase.init';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -29,6 +31,8 @@ const theme = createTheme();
 
 const SignupBox = () => {
     const [remember, setRemember] = React.useState(true);
+    const [signInWithFacebook] = useSignInWithFacebook(auth);
+    const [signInWithGoogle] = useSignInWithGoogle(auth);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -38,9 +42,6 @@ const SignupBox = () => {
             password: data.get('password'),
         });
     };
-
-    const handleFacebookSignin = () => { };
-    const handleGoogleSignin = () => { };
 
     return (
         <ThemeProvider theme={theme}>
@@ -145,7 +146,7 @@ const SignupBox = () => {
                             </Grid>
                         </Grid>
                     </Box>
-                    <Stack spacing={2} sx={{ mt: 1, width: '100%' }}>
+                    <Stack spacing={2} sx={{ mt: 1, mb: 1, width: '100%' }}>
                         <span style={{
                             color: 'black',
                             textAlign: "center"
@@ -161,7 +162,7 @@ const SignupBox = () => {
                                 fontWeight: 'bold',
                                 cursor: 'pointer'
                             }}
-                            onClick={() => handleFacebookSignin()}
+                            onClick={() => signInWithFacebook()}
                         >
                             <img
                                 src={facebook}
@@ -182,7 +183,7 @@ const SignupBox = () => {
                                 fontWeight: 'bold',
                                 cursor: 'pointer'
                             }}
-                            onClick={() => handleGoogleSignin()}
+                            onClick={() => signInWithGoogle()}
                         >
                             <img
                                 src={google}
