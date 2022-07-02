@@ -44,6 +44,7 @@ const TravelSelection = () => {
                     <div id='slider1'>
                         {
                             travels.map((travel, index) => !(current === index) && <img
+                                key={travel._id}
                                 src={travel.travelImage}
                                 alt={travel.travelName}
                                 style={{
@@ -58,6 +59,7 @@ const TravelSelection = () => {
                     <div id='slider2'>
                         {
                             travels.map((travel, index) => current === index && <img
+                                key={travel._id}
                                 src={travel.travelImage}
                                 alt={travel.travelName}
                                 style={{
