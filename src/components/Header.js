@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import logo from '../logo.png';
 import '../App.css';
 import SearchIcon from '@mui/icons-material/Search';
@@ -6,8 +6,15 @@ import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import { Link } from "react-router-dom";
 import Button from '@mui/material/Button';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { signOut } from 'firebase/auth';
+import auth from '../firebase.init';
+import Avatar from '@mui/material/Avatar';
+import Stack from '@mui/material/Stack';
 
 const Header = () => {
+    const [user] = useAuthState(auth);
+
     const Search = styled('div')(({ theme }) => ({
         position: 'relative',
         backgroundColor: alpha(theme.palette.common.white, 0.15),
@@ -51,6 +58,12 @@ const Header = () => {
         },
     }));
 
+    useEffect(() => {
+        if (user) {
+            localStorage.setItem('accessToken', JSON.stringify(user.accessToken));
+        }
+    }, [user]);
+
     return (
         <section>
             <div className='header'>
@@ -89,7 +102,18 @@ const Header = () => {
                         <Link to={'/login'} style={{
                             textDecoration: "none",
                             fontWeight: "bold"
-                        }}>Login</Link>
+                        }}>
+                            <Stack direction="row" spacing={2} style={{
+                                display: 'flex',
+                                alignItems: 'center'
+                            }}>
+                                {user && <Avatar alt={user.displayName} src={user.photoURL} />}
+                                {user ? <span onClick={() => {
+                                    localStorage.removeItem('accessToken');
+                                    signOut(auth);
+                                }}>Logout</span> : <span>Login</span>}
+                            </Stack>
+                        </Link>
                     </Button>
                 </div>
             </div>
