@@ -6,6 +6,7 @@ font-family: 'Montserrat', sans-serif; */
 * {
   padding: 0;
   margin: 0;
+  font-family: 'Montserrat', sans-serif;
 }
 
 ::selection {
@@ -121,4 +122,30 @@ font-family: 'Montserrat', sans-serif; */
   #slider2{
     margin-top: 1rem;
   }
+}
+
+/* divider between manual and social login */
+#alternative-divider{
+  position: relative;
+  display: block;
+}
+
+#alternative-divider::before{
+  content: '';
+  position: absolute;
+  background-color: #ffa939;
+  width: 45%;
+  height: 2px;
+  top: 50%;
+  left: 0;
+}
+
+#alternative-divider::after{
+  content: '';
+  position: absolute;
+  background-color: #ffa939;
+  width: 45%;
+  height: 2px;
+  top: 50%;
+  right: 0;
 }
