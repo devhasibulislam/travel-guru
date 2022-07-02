@@ -68,7 +68,7 @@ const Header = () => {
                     </Link>
                 </div>
                 <div className='start-destination'>
-                    <Search>
+                    <Search style={{display: "flex", alignItems: "center"}}>
                         <SearchIconWrapper>
                             <SearchIcon />
                         </SearchIconWrapper>

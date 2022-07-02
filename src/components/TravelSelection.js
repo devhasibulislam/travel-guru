@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import useTravels from '../utilities/useTravels';
 import '../App.css';
 import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
@@ -8,25 +8,30 @@ import Button from '@mui/material/Button';
 
 
 const TravelSelection = () => {
-    const [current, setCurrent] = useState(0);
     const [travels] = useTravels();
+    const [current, setCurrent] = useState(0);
 
     return (
         <section>
             <div className='travel-selection'>
                 <div>
-                    <h2 id=''>Cox's Bazar</h2>
-                    <p>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae, id odio. Perspiciatis laudantium voluptatum consequatur, autem iste possimus libero similique voluptatibus itaque eaque ullam doloribus ipsum eius inventore, odit quis?
-
-                    </p>
+                    {
+                        travels.map((travel, index) => current === index
+                            &&
+                            <div key={travel._id}>
+                                <h2 className='tour-title'>{travel.travelName}</h2>
+                                <p className='tour-desc'>{travel.travelDescription}</p>
+                            </div>
+                        )
+                    }
                     <Button
                         variant="contained"
                         style={{
                             backgroundColor: "#F9A51A",
                             color: "black",
                             display: "flex",
-                            alignItems: "center"
+                            alignItems: "center",
+                            marginTop: "1rem"
                         }}
                     >
                         Booking <ArrowRight />
@@ -59,7 +64,8 @@ const TravelSelection = () => {
                                     width: "270px",
                                     height: "416px",
                                     border: `${current === index && `5px solid #F9A51A`}`,
-                                    borderRadius: "25px"
+                                    borderRadius: "25px",
+                                    objectFit: "cover"
                                 }}
                             />)
                         }
@@ -67,7 +73,7 @@ const TravelSelection = () => {
                 </div>
             </div>
             <div
-                style={{ textAlign: "center" }}
+                style={{ textAlign: "right" }}
             >
                 <Button variant="text" style={{
                     color: "white",
