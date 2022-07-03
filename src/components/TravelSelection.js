@@ -5,11 +5,12 @@ import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutl
 import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
 import ArrowRight from '@mui/icons-material/ArrowRight';
 import Button from '@mui/material/Button';
-
+import { useNavigate } from 'react-router-dom';
 
 const TravelSelection = () => {
     const [travels] = useTravels();
     const [current, setCurrent] = useState(0);
+    const navigate = useNavigate();
 
     return (
         <section>
@@ -18,24 +19,27 @@ const TravelSelection = () => {
                     {
                         travels.map((travel, index) => current === index
                             &&
-                            <div key={travel._id}>
-                                <h2 className='tour-title'>{travel.travelName}</h2>
-                                <p className='tour-desc'>{travel.travelDescription}</p>
-                            </div>
+                            <>
+                                <div key={travel._id}>
+                                    <h2 className='tour-title'>{travel.travelName}</h2>
+                                    <p className='tour-desc'>{travel.travelDescription}</p>
+                                </div>
+                                <Button
+                                    variant="contained"
+                                    style={{
+                                        backgroundColor: "#F9A51A",
+                                        color: "black",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        marginTop: "1rem"
+                                    }}
+                                    onClick={() => navigate(`/booking/${travel._id}`)}
+                                >
+                                    Booking <ArrowRight />
+                                </Button>
+                            </>
                         )
                     }
-                    <Button
-                        variant="contained"
-                        style={{
-                            backgroundColor: "#F9A51A",
-                            color: "black",
-                            display: "flex",
-                            alignItems: "center",
-                            marginTop: "1rem"
-                        }}
-                    >
-                        Booking <ArrowRight />
-                    </Button>
                 </div>
                 <div
                     style={{ textAlign: "right" }}
