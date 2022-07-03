@@ -11,6 +11,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useSendPasswordResetEmail } from 'react-firebase-hooks/auth';
+import auth from '../firebase.init';
 
 function Copyright(props) {
     return (
@@ -29,14 +31,15 @@ const theme = createTheme();
 
 const ResetBox = () => {
     const [remember, setRemember] = React.useState(true);
+    const [sendPasswordResetEmail] = useSendPasswordResetEmail(auth);
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async(event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+        const email = data.get('email');
+
+        await sendPasswordResetEmail(email);
+        event.target.reset();
     };
 
     return (

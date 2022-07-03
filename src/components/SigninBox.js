@@ -5,7 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -17,7 +17,7 @@ import styled from '@emotion/styled';
 import facebook from '../assets/icons/fb.png';
 import google from '../assets/icons/google.png';
 import auth from '../firebase.init';
-import { useSignInWithFacebook, useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import { useSignInWithEmailAndPassword, useSignInWithFacebook, useSignInWithGoogle } from 'react-firebase-hooks/auth';
 
 function Copyright(props) {
     return (
@@ -44,17 +44,24 @@ const theme = createTheme();
 
 const SigninBox = () => {
     const [remember, setRemember] = React.useState(true);
-    const [signInWithFacebook] = useSignInWithFacebook(auth);
-    const [signInWithGoogle] = useSignInWithGoogle(auth);
+    const [signInWithFacebook, fbUser] = useSignInWithFacebook(auth);
+    const [signInWithGoogle, gglUser] = useSignInWithGoogle(auth);
+    const [signInWithEmailAndPassword, user] = useSignInWithEmailAndPassword(auth);
+
+    const navigate = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+        const email = data.get('email');
+        const password = data.get('password');
+
+        signInWithEmailAndPassword(email, password);
     };
+
+    if (fbUser || gglUser || user) {
+        navigate('/', { replace: true });
+    }
 
     return (
         <ThemeProvider theme={theme}>

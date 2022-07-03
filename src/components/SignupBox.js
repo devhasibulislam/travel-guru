@@ -5,7 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -16,7 +16,7 @@ import { Paper, Stack } from '@mui/material';
 import styled from '@emotion/styled';
 import facebook from '../assets/icons/fb.png';
 import google from '../assets/icons/google.png';
-import { useSignInWithFacebook, useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import { useCreateUserWithEmailAndPassword, useSignInWithFacebook, useSignInWithGoogle, useUpdateProfile } from 'react-firebase-hooks/auth';
 import auth from '../firebase.init';
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -31,17 +31,31 @@ const theme = createTheme();
 
 const SignupBox = () => {
     const [remember, setRemember] = React.useState(true);
-    const [signInWithFacebook] = useSignInWithFacebook(auth);
-    const [signInWithGoogle] = useSignInWithGoogle(auth);
+    const [signInWithFacebook, fbUser] = useSignInWithFacebook(auth);
+    const [signInWithGoogle, gglUser] = useSignInWithGoogle(auth);
+    const [updateProfile] = useUpdateProfile(auth);
+    const [createUserWithEmailAndPassword, user] = useCreateUserWithEmailAndPassword(auth);
 
-    const handleSubmit = (event) => {
+    const navigate = useNavigate();
+
+    const handleSubmit = async(event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+        const firstName = data.get('firstName');
+        const lastName = data.get('lastName');
+        const displayName = firstName + ' ' + lastName;
+        const email = data.get('email');
+        const password = data.get('password');
+
+        await createUserWithEmailAndPassword(email, password);
+        await updateProfile({displayName});
+
+        event.target.reset();
     };
+
+    if(fbUser || gglUser || user){
+        navigate('/');
+    }
 
     return (
         <ThemeProvider theme={theme}>
