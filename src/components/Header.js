@@ -1,9 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from '../logo.png';
 import '../App.css';
-import SearchIcon from '@mui/icons-material/Search';
-import { styled, alpha } from '@mui/material/styles';
-import InputBase from '@mui/material/InputBase';
 import { Link } from "react-router-dom";
 import Button from '@mui/material/Button';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -14,55 +11,28 @@ import Stack from '@mui/material/Stack';
 
 const Header = () => {
     const [user] = useAuthState(auth);
+    const [countries, setCountries] = useState([]);
+    const [input, setInput] = useState('');
+    const [visibility, setVisibility] = useState(false);
+    // const [searchCountries, setSearchCountries] = useState([]);
 
-    const Search = styled('div')(({ theme }) => ({
-        position: 'relative',
-        backgroundColor: alpha(theme.palette.common.white, 0.15),
-        '&:hover': {
-            backgroundColor: alpha(theme.palette.common.white, 0.25),
-        },
-        marginLeft: 0,
-        width: '370px !important',
-        height: '44px !important',
-        border: '1px solid #FFFFFF',
-        borderRadius: "5px",
-        [theme.breakpoints.up('sm')]: {
-            marginLeft: theme.spacing(1),
-            width: 'auto',
-        },
-    }));
-
-    const SearchIconWrapper = styled('div')(({ theme }) => ({
-        padding: theme.spacing(0, 2),
-        height: '100%',
-        position: 'absolute',
-        pointerEvents: 'none',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    }));
-
-    const StyledInputBase = styled(InputBase)(({ theme }) => ({
-        color: 'inherit',
-        '& .MuiInputBase-input': {
-            padding: theme.spacing(1, 1, 1, 0),
-            paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-            transition: theme.transitions.create('width'),
-            width: '100%',
-            [theme.breakpoints.up('sm')]: {
-                width: '6ch',
-                '&:focus': {
-                    width: '20ch',
-                },
-            },
-        },
-    }));
+    useEffect(() => {
+        const url = `https://restcountries.com/v2/all`;
+        const getCountries = async () => {
+            const request = await fetch(url);
+            const response = await request.json();
+            setCountries(response);
+        };
+        getCountries();
+    }, []);
 
     useEffect(() => {
         if (user) {
             localStorage.setItem('accessToken', JSON.stringify(user.accessToken));
         }
     }, [user]);
+
+    const searchCountry = countries.filter(country => country.name.toLowerCase().includes(input.toLowerCase()));
 
     return (
         <section>
@@ -81,15 +51,59 @@ const Header = () => {
                     </Link>
                 </div>
                 <div className='start-destination'>
-                    <Search style={{ display: "flex", alignItems: "center" }}>
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Search your destination…"
-                            inputProps={{ 'aria-label': 'search' }}
-                        />
-                    </Search>
+                    <input
+                        type="text"
+                        name="search"
+                        id="search"
+                        placeholder='Search your destination...'
+                        style={{
+                            width: '370px',
+                            height: "44px",
+                            borderRadius: '5px',
+                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                            border: '1px solid #ffffff',
+                            padding: '0 1rem',
+                            fontFamily: "'Montserrat', sans-serif",
+                            color: 'white',
+                            fontWeight: 'bold',
+                            fontSize: '15px'
+                        }}
+                        onChange={(event) => setInput(event.target.value)}
+                        onFocus={() => setVisibility(true)}
+                        onBlur={() => setVisibility(false)}
+                        autoComplete='off'
+                    />
+                    {
+                        visibility
+                        &&
+                        <div id='country-name-viewer'>
+                            {
+                                searchCountry.map((country, index) => <div
+                                    key={index}
+                                    style={{
+                                        color: 'black',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        borderBottom: '1px solid gray',
+                                        padding: '.2rem 0',
+                                        width: '100%'
+                                    }}
+                                >
+                                    <p>{country.name}</p>
+                                    <img
+                                        src={country.flags.svg}
+                                        alt={country.demonym}
+                                        style={{
+                                            height: '20px',
+                                            width: '20px',
+                                            objectFit: 'cover',
+                                        }}
+                                    />
+                                </div>)
+                            }
+                        </div>
+                    }
                 </div>
                 <div>
                     <Button

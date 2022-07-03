@@ -4,17 +4,9 @@ import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 import { format } from 'date-fns';
 import Button from '@mui/material/Button'
-import { Box, Container, createTheme, CssBaseline, Paper, styled, ThemeProvider } from '@mui/material';
+import { Box, Container, createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 
 const theme = createTheme();
-
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-}));
 
 const BookingSection = ({ id, travels }) => {
     const [selected, setSelected] = React.useState(new Date());
